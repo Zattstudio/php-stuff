@@ -1,20 +1,20 @@
 <?php
-/// Zeichen: _ . : ; o * & 8 # @
+/// Symbols: _ . : ; o * & 8 # @
 function loadImageFile($path)
 {
   $image = @imagecreatefromjpeg($path);
   if (!$image) {
-    echo "Fehler beim laden des von " . $path .".";
+    echo "Error while loading " . $path .".";
   }
   return $image;
 }
-function average($farbwert) {    // binär hex rgb
+function average($colorVal) {    // binary hex rgb
 
   $r = $g = $b = 0;
 
-  $r = ($farbwert >> 16) & 0xff;
-  $g = ($farbwert >> 8) & 0xff;
-  $b = $farbwert & 0xff;
+  $r = ($colorVal >> 16) & 0xff;
+  $g = ($colorVal >> 8) & 0xff;
+  $b = $colorVal & 0xff;
 //  echo($r . " " . $g . " " . $b . " <br>");
   $hue = $r * 0.299 + $g * 0.587 + $b * 0.114;
   //echo $hue;
@@ -26,14 +26,12 @@ function imageToString($file)
 {
   $img = loadImageFile($file);
   list($width, $height) = getimagesize($file);
-  $zeichen = array_reverse(array("_", ".", ":", "*","+", "0", "s", "8", "&amp;", "#"));
+  $sym = array_reverse(array("_", ".", ":", "*","+", "0", "s", "8", "&amp;", "#"));
   $string = "";
-  for ($zeilen=0; $zeilen < $height; $zeilen++) {
-    for ($spalten=0; $spalten < $width ; $spalten++) {
-      $farbe = imagecolorat($img, $spalten, $zeilen);
-      $string .= $zeichen[average($farbe)];
-      ///var_dump( $farbe );
-      //echo average($farbe) . "<br>";
+  for ($row=0; $row < $height; $row++) {
+    for ($column=0; $column < $width ; $column++) {
+      $farbe = imagecolorat($img, $column, $row);
+      $string .= $sym[average($farbe)];
     }
     $string .= "<br>";
   }
@@ -55,12 +53,6 @@ function color_inverse($color){
 
 
 $file = "./image.jpg";
-//$bild = "./photo.jpg";
-//echo(loadImageFile("photo.jpg"));
-//echo ("Breite: " . $width . "<br>Höhe: " . $height . "<br>");
-
-
-//echo imageToString($img);
 
 
  ?>
@@ -69,12 +61,12 @@ $file = "./image.jpg";
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
     <?php
       if(isset($_GET["hex"])){
-        $monofarbe = $_GET["hex"];
+        $mono = $_GET["hex"];
       }
       else {
-        $monofarbe = "000000";
+        $mono = "000000";
       }
-      echo ("<style>body{color: #" . $monofarbe . "; background-color: " . color_inverse($monofarbe) ."}</style>");
+      echo ("<style>body{color: #" . $mono . "; background-color: " . color_inverse($mono) ."}</style>");
      ?>
     <style>
     body{
